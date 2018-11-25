@@ -62,9 +62,7 @@ var sumBelow = function(n) {
 // 6. Get the integers within a range (x, y).
 // range(2,9); // [3,4,5,6,7,8]
 var range = function(x, y) {
-    let arr = [];
-    if(x <= y) return arr;
-    return arr.push(range(x + 1, y));
+    return  x < y -1 ? [x+1].concat(range(x + 1, y)) : [];
 };
 
 // 7. Compute the exponent of a number.
@@ -73,6 +71,22 @@ var range = function(x, y) {
 // exponent(4,3); // 64
 // https://www.khanacademy.org/computing/computer-science/algorithms/recursive-algorithms/a/computing-powers-of-a-number
 var exponent = function(base, exp) {
+    let y;
+    if(exp === 0) {
+        return 1;
+    }
+    if(exp > 0 && exp % 2 === 0){
+         y = exponent(base, exp/2);
+         return y * y;
+    }
+    if(exp > 0 && exp % 2 !== 0) {
+        y = exponent(base , exp - 1)
+        return base * y;
+    }
+    if (exp < 0) {
+        return 1 / (exponent(base, -1 * exp));
+    }
+
 };
 
 // 8. Determine if a number is a power of two.
@@ -80,14 +94,34 @@ var exponent = function(base, exp) {
 // powerOfTwo(16); // true
 // powerOfTwo(10); // false
 var powerOfTwo = function(n) {
+    if(n === 1 ){
+        return true
+    }
+    if(n < 1){
+        return false;
+    }
+    return powerOfTwo(n / 2)
 };
 
 // 9. Write a function that reverses a string.
 var reverse = function(string) {
+    if(string.length <= 1){
+        return string;
+    }
+    return reverse(string.substring(1)) + string[0];
+
 };
 
 // 10. Write a function that determines if a string is a palindrome.
 var palindrome = function(string) {
+    string = string.trim().toLowerCase();
+    if(string.length <= 1){
+        return true;
+    }
+    if(string[0] !== string[string.length - 1]){
+        return false
+    }
+    return palindrome(string.slice(1, -1));
 };
 
 // 11. Write a function that returns the remainder of x divided by y without using the
@@ -96,16 +130,43 @@ var palindrome = function(string) {
 // modulo(17,5) // 2
 // modulo(22,6) // 4
 var modulo = function(x, y) {
+    if (y === 0) { 
+        return NaN;
+     }
+    if (x < 0) { 
+        return -modulo(-x, y);
+     }  
+
+    if (y < 0) { 
+        return modulo(x, -y);
+     }  
+
+    if (x < y) { 
+        return x;     
+     }
+
+    return modulo(x - y, y);
 };
 
 // 12. Write a function that multiplies two numbers without using the * operator or
 // Math methods.
 var multiply = function(x, y) {
+    if(y === 0){return 0;}
+    if(y < 0) {return -(x + multiply(x, y + 1));}
+    if(y === 1){return x;}
+    return x + multiply(x, y -1);
 };
 
 // 13. Write a function that divides two numbers without using the / operator or
 // Math methods to arrive at an approximate quotient (ignore decimal endings).
 var divide = function(x, y) {
+    if(y === 0) {
+        return NaN;
+    }
+    if(x < y) { return 0; }
+
+        return 1 + divide(x- y, y); 
+    
 };
 
 // 14. Find the greatest common divisor (gcd) of two positive numbers. The GCD of two
@@ -114,6 +175,12 @@ var divide = function(x, y) {
 // http://www.cse.wustl.edu/~kjg/cse131/Notes/Recursion/recursion.html
 // https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/the-euclidean-algorithm
 var gcd = function(x, y) {
+    if(x < 0 || y < 0) { return null; }
+    if (!y) {
+        return x;
+    }
+
+    return gcd(y, x % y);
 };
 
 // 15. Write a function that compares each character of two strings and returns true if
@@ -121,11 +188,22 @@ var gcd = function(x, y) {
 // compareStr('house', 'houses') // false
 // compareStr('tomato', 'tomato') // true
 var compareStr = function(str1, str2) {
+    if (str1.length === 0 && str2.length === 0) {
+            return true;
+    }
+    if (str1[0] === str2[0]) {
+        return compareStr(str1.slice(1), str2.slice(1));
+    }
+    if (str1[0] !== str2[0]) {
+        return false;
+    }
+   
 };
 
 // 16. Write a function that accepts a string and creates an array where each letter
 // occupies an index of the array.
 var createArray = function(str) {
+    return str.length !== 0 ? [].concat(createArray(str.substring(0,1))) : [];
 };
 
 // 17. Reverse the order of an array
@@ -285,3 +363,40 @@ var mergeSort = function(array) {
 // obj1 === obj2 // false
 var clone = function(input) {
 };
+
+var niffAarray = function(arr) {
+    let newArray = [];
+    let index = 0;
+    let arrLenth = arr.length; 
+    for(let i = 0, j = arrLenth - 1; i < arrLenth; i++) {
+        if(arr[i] % 2 == 0) {
+            newArray[index] = arr[i]
+            index++
+        }
+        else {
+            newArray[j] = arr[i];
+            j--
+        }
+    }
+    return newArray;
+}
+
+let encode = (str) => {
+    let count = 0;
+    let output = '';
+    let char = str[0];
+    for(let i = 0; i < str.length; i++) {
+        //char = str[i];
+        if(str[i] === char){
+            count++
+        }else {
+            output += count + char;
+            count = 0;
+            char = str[i];
+            i--
+        }
+        
+    }
+    return output;
+}
+
